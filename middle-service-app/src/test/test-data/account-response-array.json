@@ -1,0 +1,12 @@
+[
+  {
+  "accountId" : "b5424a38-b2de-4a68-91e9-b669aef0cdf9",
+  "accountName" : "Test1",
+  "amount" : 123245
+  },
+  {
+    "accountId" : "b6424a38-b2de-4a68-91e9-b669aef0cdf9",
+    "accountName" : "Test2",
+    "amount" : 232456
+  }
+]
