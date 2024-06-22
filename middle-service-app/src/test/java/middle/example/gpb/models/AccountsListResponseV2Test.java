@@ -55,5 +55,4 @@ class AccountsListResponseV2Test {
 
         assertArrayEquals(exp.toArray(), res.toArray());
     }
-
 }

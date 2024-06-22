@@ -1,3 +1,6 @@
 package middle.example.gpb.models;
 
-public record CreateUserRequestV2(long userId, String userName) {}
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record CreateUserRequestV2(@NotNull Long userId, @NotBlank String userName) {}

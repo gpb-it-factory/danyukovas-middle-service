@@ -4,5 +4,5 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("classpath:application-toggle.yml")
+@PropertySource("classpath:http-client-config.yml")
 public class AppConfig {}

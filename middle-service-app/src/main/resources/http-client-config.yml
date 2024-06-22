@@ -1,0 +1,6 @@
+httpclient:
+    back-service-uri: http://localhost:8087/api/v2
+    maxConPerRoute: 20
+    maxConTotal: 50
+    connectionTimeoutMs: 5000
+    requestTimeoutMs: 30000
