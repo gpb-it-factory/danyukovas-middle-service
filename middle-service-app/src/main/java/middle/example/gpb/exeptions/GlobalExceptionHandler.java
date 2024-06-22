@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRuntimeException() {
         return ResponseEntity.status(HttpStatus.OK)
@@ -66,5 +65,4 @@ public class GlobalExceptionHandler {
                 .map(v -> "Поле " + v.getField() + " " + v.getDefaultMessage() + ".")
                 .collect(Collectors.joining("\n"));
     }
-
 }
