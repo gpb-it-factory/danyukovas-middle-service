@@ -12,7 +12,6 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 
 @Configuration
-@ConfigurationProperties(prefix = "httpclient")
 public class RestClientConfig {
 
     public final int MAX_CON_PER_ROUTE;
@@ -21,11 +20,11 @@ public class RestClientConfig {
     public final int REQUEST_TIMEOUT_MS;
     public final String URI;
 
-    public RestClientConfig(@Value("${maxConPerRoute}") int maxConPerRoute,
-                            @Value("${maxConTotal}") int maxConTotal,
-                            @Value("${connectionTimeoutMs}") int connectionTimeoutMs,
-                            @Value("${requestTimeoutMs}") int requestTimeoutMs,
-                            @Value("${back-service-uri}") String uri) {
+    public RestClientConfig(@Value("${httpclient.maxConPerRoute}") int maxConPerRoute,
+                            @Value("${httpclient.maxConTotal}") int maxConTotal,
+                            @Value("${httpclient.connectionTimeoutMs}") int connectionTimeoutMs,
+                            @Value("${httpclient.requestTimeoutMs}") int requestTimeoutMs,
+                            @Value("${httpclient.back-service-uri}") String uri) {
         this.MAX_CON_PER_ROUTE = maxConPerRoute;
         this.MAX_CON_TOTAL = maxConTotal;
         this.CONNECTION_TIMEOUT_MS = connectionTimeoutMs;
