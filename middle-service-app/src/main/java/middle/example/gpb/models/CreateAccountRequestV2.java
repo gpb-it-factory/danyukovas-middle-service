@@ -1,3 +1,5 @@
 package middle.example.gpb.models;
 
-public record CreateAccountRequestV2(String accountName) {}
+import jakarta.validation.constraints.NotBlank;
+
+public record CreateAccountRequestV2(@NotBlank String accountName) {}

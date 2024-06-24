@@ -1,8 +1,8 @@
-/*package middle.example.gpb.controllers;
+package middle.example.gpb.controllers;
 
+import jakarta.validation.Valid;
 import middle.example.gpb.models.CreateAccountRequestV2;
 import middle.example.gpb.services.AccountService;
-import middle.example.gpb.services.BackendServiceMock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +21,9 @@ public class AccountController {
 
     @PostMapping
     public ResponseEntity<String> registerNewAccount(@PathVariable(name = "id") long id,
-                                                @RequestBody CreateAccountRequestV2 newAccount) {
-        String response = accountService;
+                                                @Valid @RequestBody CreateAccountRequestV2 newAccount) {
+        String response = accountService.createNewAccount(newAccount, id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(response);
     }
-}*/
+}

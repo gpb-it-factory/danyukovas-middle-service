@@ -1,11 +1,13 @@
 package middle.example.gpb.controllers;
 
 import middle.example.gpb.exeptions.GlobalExceptionHandler;
-import middle.example.gpb.gateways.user_gateway.UserGateway;
 import middle.example.gpb.gateways.BackendRepositoryMock;
+import middle.example.gpb.gateways.account_gateway.AccountGateway;
+import middle.example.gpb.gateways.user_gateway.UserGateway;
+import middle.example.gpb.models.CreateAccountRequestV2;
 import middle.example.gpb.models.CreateUserRequestV2;
+import middle.example.gpb.services.AccountService;
 import middle.example.gpb.services.UserService;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,9 +16,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -26,14 +26,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-class UsersControllerITTest {
+public class AccountControllerITTest {
 
     @Autowired
     MockMvc mockMvc;
     @SpyBean
-    UserService userService;
+    AccountService accountService;
     @SpyBean
     UserGateway userGateway;
+    @SpyBean
+    AccountGateway accountGateway;
     @SpyBean
     BackendRepositoryMock repositoryMock;
     @SpyBean
@@ -42,41 +44,24 @@ class UsersControllerITTest {
     @Test
     public void whenValidDataTest() throws Exception {
 
-        mockMvc.perform(post("/api/users")
+        var testId = 1L;
+        var newAcc = new CreateAccountRequestV2("test");
+
+        mockMvc.perform(post("/api/v2/users/1/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                  "userId": 12, \s
-                                  "userName": "test"
+                                  "accountName": "test"
                                 }
                                 """))
                 .andExpectAll(
                         status().isOk(),
-                        content().string("Пользователь успешно зарегистрирован.")
+                        content().string("Аккаунт успешно создан.")
                 );
 
-        verify(userService, times(1)).responseFromBackend(new CreateUserRequestV2(12L, "test"));
-        verify(userGateway, times(1)).newUserRegisterResponse(new CreateUserRequestV2(12L, "test"));
+        verify(accountService, times(1)).createNewAccount(newAcc, testId);
+        verify(userGateway, times(1)).getUserResponse(testId);
+        verify(accountGateway, times(1)).newAccountRegisterResponse(newAcc, testId);
         verify(repositoryMock, times(2)).getRepository();
-    }
-
-    @Test
-    public void whenInvalidDataTest() throws Exception {
-
-            mockMvc.perform(post("/api/users")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content("""
-                                {
-                                  "userId": null, \s
-                                  "userName": ""
-                                }
-                                """))
-                    .andExpectAll(
-                            status().isOk(),
-                            content().string(
-                                    Matchers.containsString("Полученные данные не валидны, пожалуйста, введите верную информацию."))
-                    );
-
-            verify(handler, times(1)).handleMethodArgumentNotValidException(any(MethodArgumentNotValidException.class));
     }
 }
