@@ -19,13 +19,13 @@ public class UserGatewayMemoryMockImpl implements UserGateway {
     }
 
     @Override
-    public String newUserRegisterResponse(CreateUserRequestV2 userRequest) {
+    public boolean newUserRegisterResponse(CreateUserRequestV2 userRequest) {
         List<Long> users = repository.getUsers();
         if (users.contains(userRequest.userId())) {
-            return "Такой пользователь уже создан.";
+            return false;
         } else {
             users.add(userRequest.userId());
-            return "Пользователь успешно зарегистрирован.";
+            return true;
         }
     }
 }

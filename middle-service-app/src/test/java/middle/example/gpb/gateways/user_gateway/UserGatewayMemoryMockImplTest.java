@@ -21,10 +21,9 @@ class UserGatewayMemoryMockImplTest {
 
         var newUser = new CreateUserRequestV2(6L, "test");
 
-        String res = gatewayMock.newUserRegisterResponse(newUser);
-        String exp = "Пользователь успешно зарегистрирован.";
+        boolean res = gatewayMock.newUserRegisterResponse(newUser);
 
-        assertEquals(exp, res);
+        assertTrue(res);
     }
 
     @Test
@@ -32,9 +31,9 @@ class UserGatewayMemoryMockImplTest {
 
         var newUser = new CreateUserRequestV2(1L, "test");
 
-        String res = gatewayMock.newUserRegisterResponse(newUser);
+        boolean res = gatewayMock.newUserRegisterResponse(newUser);
         String exp = "Такой пользователь уже создан.";
 
-        assertEquals(exp, res);
+        assertFalse(res);
     }
 }

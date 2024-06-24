@@ -24,7 +24,7 @@ public class UserGatewayBackendImpl implements UserGateway {
     }
 
     @Override
-    public String newUserRegisterResponse(CreateUserRequestV2 userRequest) {
+    public boolean newUserRegisterResponse(CreateUserRequestV2 userRequest) {
         ResponseEntity<Void> response = restClient.post()
                 .uri("/users")
                 .body(userRequest)
@@ -33,6 +33,6 @@ public class UserGatewayBackendImpl implements UserGateway {
                     throw new CustomBackendServiceRuntimeException(req.toString(), resp.getBody(), mapper);
                 })
                 .toBodilessEntity();
-        return "Пользователь успешно зарегистрирован.";
+        return true;
     }
 }

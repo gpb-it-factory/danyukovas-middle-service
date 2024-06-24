@@ -14,6 +14,7 @@ public class UserService {
     }
 
     public String responseFromBackend(CreateUserRequestV2 createUserRequest) {
-        return userGateway.newUserRegisterResponse(createUserRequest);
+        return userGateway.newUserRegisterResponse(createUserRequest) ?
+                "Пользователь успешно зарегистрирован." : "Такой пользователь уже создан.";
     }
 }

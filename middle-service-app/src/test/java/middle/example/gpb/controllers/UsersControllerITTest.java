@@ -61,7 +61,7 @@ class UsersControllerITTest {
     }
 
     @Test
-    public void whenInValidDataTest() throws Exception {
+    public void whenInvalidDataTest() throws Exception {
 
             mockMvc.perform(post("/api/users")
                             .contentType(MediaType.APPLICATION_JSON)
