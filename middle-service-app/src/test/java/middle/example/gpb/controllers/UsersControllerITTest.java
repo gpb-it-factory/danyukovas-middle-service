@@ -2,7 +2,7 @@ package middle.example.gpb.controllers;
 
 import middle.example.gpb.exeptions.GlobalExceptionHandler;
 import middle.example.gpb.gateways.user_gateway.UserGateway;
-import middle.example.gpb.gateways.user_gateway.UserRepositoryMock;
+import middle.example.gpb.gateways.user_gateway.UserBackendRepMock;
 import middle.example.gpb.models.CreateUserRequestV2;
 import middle.example.gpb.services.UserService;
 import org.hamcrest.Matchers;
@@ -35,7 +35,7 @@ class UsersControllerITTest {
     @SpyBean
     UserGateway userGateway;
     @SpyBean
-    UserRepositoryMock repositoryMock;
+    UserBackendRepMock repositoryMock;
     @SpyBean
     GlobalExceptionHandler handler;
 

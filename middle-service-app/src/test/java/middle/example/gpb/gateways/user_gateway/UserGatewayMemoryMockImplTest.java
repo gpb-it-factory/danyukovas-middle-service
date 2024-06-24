@@ -12,7 +12,7 @@ class UserGatewayMemoryMockImplTest {
 
     @BeforeEach
     public void setUp() {
-        UserRepositoryMock repositoryMock = new UserRepositoryMock();
+        UserBackendRepMock repositoryMock = new UserBackendRepMock();
         gatewayMock = new UserGatewayMemoryMockImpl(repositoryMock);
     }
 

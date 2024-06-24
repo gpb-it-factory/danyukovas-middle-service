@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Component
-public class UserRepositoryMock {
+public class UserBackendRepMock {
 
     List<Long> users = new ArrayList<>(List.of(1L, 2L, 3L, 4L, 5L));
 }

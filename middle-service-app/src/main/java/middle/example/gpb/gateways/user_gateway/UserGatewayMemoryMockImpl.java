@@ -11,10 +11,10 @@ import java.util.List;
 @ConditionalOnProperty(prefix = "features", name = "backendServiceEnabled", havingValue = "false", matchIfMissing = true)
 public class UserGatewayMemoryMockImpl implements UserGateway {
 
-    private final UserRepositoryMock repository;
+    private final UserBackendRepMock repository;
 
     @Autowired
-    public UserGatewayMemoryMockImpl(UserRepositoryMock repository) {
+    public UserGatewayMemoryMockImpl(UserBackendRepMock repository) {
         this.repository = repository;
     }
 
