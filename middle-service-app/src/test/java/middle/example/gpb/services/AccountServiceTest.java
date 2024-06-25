@@ -44,4 +44,41 @@ class AccountServiceTest {
 
         assertEquals(exp, res);
     }
+
+    @Test
+    public void whenGetAllAccountsNotFoundUserTest() {
+
+        var testId = 6;
+
+        String res = accountService.getAllAccounts(testId);
+        String exp =  "Пользователь не найден. Пожалуйста, сначала выполните регистрацию.";
+
+        assertEquals(exp, res);
+    }
+
+    @Test
+    public void whenGetAllAccountsFoundUserZeroAccountsTest() {
+
+        var testId = 1;
+
+        String res = accountService.getAllAccounts(testId);
+        String exp =  "Нет ни одного созданного аккаунта.";
+
+        assertEquals(exp, res);
+    }
+
+    @Test
+    public void whenGetAllAccountsFoundUserHasAccountsTest() {
+
+        var testId = 66;
+
+        String res = accountService.getAllAccounts(testId);
+        String exp = """
+                Название аккаунта: test1
+                Сумма счета: 5000.00
+                Название аккаунта: test2
+                Сумма счета: 6000.00""";
+
+        assertEquals(exp, res);
+    }
 }

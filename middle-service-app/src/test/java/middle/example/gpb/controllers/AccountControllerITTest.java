@@ -5,9 +5,7 @@ import middle.example.gpb.gateways.BackendRepositoryMock;
 import middle.example.gpb.gateways.account_gateway.AccountGateway;
 import middle.example.gpb.gateways.user_gateway.UserGateway;
 import middle.example.gpb.models.CreateAccountRequestV2;
-import middle.example.gpb.models.CreateUserRequestV2;
 import middle.example.gpb.services.AccountService;
-import middle.example.gpb.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -62,6 +61,27 @@ public class AccountControllerITTest {
         verify(accountService, times(1)).createNewAccount(newAcc, testId);
         verify(userGateway, times(1)).getUserResponse(testId);
         verify(accountGateway, times(1)).newAccountRegisterResponse(newAcc, testId);
+        verify(repositoryMock, times(2)).getRepository();
+    }
+
+    @Test
+    public void getAccountBalancePerformTest() throws Exception {
+
+        var testId = 66L;
+
+        mockMvc.perform(get("/api/v2/users/66/accounts"))
+                .andExpectAll(
+                        status().isOk(),
+                        content().string("""
+                Название аккаунта: test1
+                Сумма счета: 5000.00
+                Название аккаунта: test2
+                Сумма счета: 6000.00""")
+                );
+
+        verify(accountService, times(1)).getAllAccounts(testId);
+        verify(userGateway, times(1)).getUserResponse(testId);
+        verify(accountGateway, times(1)).allAccountsResponse(testId);
         verify(repositoryMock, times(2)).getRepository();
     }
 }

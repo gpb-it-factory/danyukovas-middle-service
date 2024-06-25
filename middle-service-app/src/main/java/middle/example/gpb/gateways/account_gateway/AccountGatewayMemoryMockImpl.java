@@ -28,4 +28,9 @@ public class AccountGatewayMemoryMockImpl implements AccountGateway {
         List<AccountsListResponseV2> res = repMock.getRepository().get(id);
             res.add(new AccountsListResponseV2(UUID.randomUUID(), accountRequest.accountName(), new BigDecimal(5000)));
     }
+
+    @Override
+    public List<AccountsListResponseV2> allAccountsResponse(long id) {
+        return repMock.getRepository().get(id);
+    }
 }
