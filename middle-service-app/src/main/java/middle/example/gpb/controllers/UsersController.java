@@ -2,6 +2,7 @@ package middle.example.gpb.controllers;
 
 import jakarta.validation.Valid;
 import middle.example.gpb.models.CreateUserRequestV2;
+import middle.example.gpb.models.ResponseToFront;
 import middle.example.gpb.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,8 +21,8 @@ public class UsersController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerNewUser(@Valid @RequestBody CreateUserRequestV2 newUser) {
-        String result = userService.responseFromBackend(newUser);
+    public ResponseEntity<ResponseToFront> registerNewUser(@Valid @RequestBody CreateUserRequestV2 newUser) {
+        var result = userService.responseFromBackend(newUser);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(result);
     }

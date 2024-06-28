@@ -32,7 +32,6 @@ class UserGatewayMemoryMockImplTest {
         var newUser = new CreateUserRequestV2(1L, "test");
 
         boolean res = gatewayMock.newUserRegisterResponse(newUser);
-        String exp = "Такой пользователь уже создан.";
 
         assertFalse(res);
     }
