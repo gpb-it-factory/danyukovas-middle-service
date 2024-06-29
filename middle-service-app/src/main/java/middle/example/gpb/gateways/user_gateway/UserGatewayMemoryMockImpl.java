@@ -26,7 +26,7 @@ public class UserGatewayMemoryMockImpl implements UserGateway {
         if (users.contains(userRequest.userId())) {
             return false;
         } else {
-            backendRepository.getRepository().put(userRequest.userId(), new ArrayList<>());
+            backendRepository.getRepository().put(userRequest.userId(), Optional.empty());
             return true;
         }
     }

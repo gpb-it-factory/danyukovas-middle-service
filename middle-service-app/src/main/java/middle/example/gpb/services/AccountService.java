@@ -18,12 +18,11 @@ public class AccountService {
         this.userGateway = userGateway;
     }
 
-    public String createNewAccount(CreateAccountRequestV2 accountRequest, long id) {
-        if (userGateway.getUserResponse(id) != null) {
-            accountGateway.newAccountRegisterResponse(accountRequest, id);
-            return "Аккаунт успешно создан.";
-        } else {
-            return "Пользователь не найден. Пожалуйста, сначала выполните регистрацию.";
+    public boolean createNewAccount(CreateAccountRequestV2 accountRequest, long id) {
+        if (userGateway.getUserResponse(id) == null) {
+            return false;
         }
+        accountGateway.newAccountRegisterResponse(accountRequest, id);
+        return true;
     }
 }

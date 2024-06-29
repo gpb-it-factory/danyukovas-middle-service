@@ -1,5 +1,6 @@
 package middle.example.gpb.gateways.account_gateway;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import middle.example.gpb.gateways.BackendRepositoryMock;
 import middle.example.gpb.models.CreateAccountRequestV2;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +17,9 @@ class AccountGatewayMemoryMockImplTest {
 
     @BeforeEach
     public void setUp() {
+        ObjectMapper mapper = new ObjectMapper();
         this.repositoryMock = new BackendRepositoryMock();
-        this.gatewayMock = new AccountGatewayMemoryMockImpl(repositoryMock);
+        this.gatewayMock = new AccountGatewayMemoryMockImpl(repositoryMock, mapper);
     }
 
     @Test
@@ -27,9 +29,9 @@ class AccountGatewayMemoryMockImplTest {
         long testId = 5;
 
         gatewayMock.newAccountRegisterResponse(newAcc, testId);
-        int res = repositoryMock.getRepository().get(testId).size();
+        var res = repositoryMock.getRepository().get(testId);
 
-        assertThat(res).isEqualTo(1);
+        assertNotNull(res);
     }
 
     @Test

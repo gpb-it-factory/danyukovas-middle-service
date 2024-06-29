@@ -2,6 +2,7 @@ package middle.example.gpb.controllers;
 
 import jakarta.validation.Valid;
 import middle.example.gpb.models.CreateAccountRequestV2;
+import middle.example.gpb.models.ResponseToFront;
 import middle.example.gpb.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,10 +21,14 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerNewAccount(@PathVariable(name = "id") long id,
-                                                @Valid @RequestBody CreateAccountRequestV2 newAccount) {
-        String response = accountService.createNewAccount(newAccount, id);
+    public ResponseEntity<ResponseToFront> registerNewAccount(@PathVariable(name = "id") long id,
+                                                              @Valid @RequestBody CreateAccountRequestV2 newAccount) {
+        boolean isSuccessCreation = accountService.createNewAccount(newAccount, id);
+        if (isSuccessCreation) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseToFront("Аккаунт успешно создан."));
+        }
         return ResponseEntity.status(HttpStatus.OK)
-                .body(response);
+                .body(new ResponseToFront("Пользователь не найден. Пожалуйста, сначала выполните регистрацию."));
     }
 }

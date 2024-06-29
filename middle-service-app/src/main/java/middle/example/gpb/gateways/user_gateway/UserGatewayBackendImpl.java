@@ -40,7 +40,7 @@ public class UserGatewayBackendImpl implements UserGateway {
     @Override
     public UserResponseV2 getUserResponse(long id) {
         return restClient.get()
-                .uri("/{id}", id)
+                .uri("/users/{id}", id)
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, (req, resp) -> {
                     throw new CustomBackendServiceRuntimeException(req.toString(), resp.getBody(), mapper);

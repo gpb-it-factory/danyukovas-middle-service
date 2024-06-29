@@ -25,7 +25,7 @@ public class AccountGatewayBackendImpl implements AccountGateway {
     @Override
     public void newAccountRegisterResponse(CreateAccountRequestV2 accountRequest, long id) {
         restClient.post()
-                .uri("/{id}/accounts", id)
+                .uri("/users/{id}/accounts", id)
                 .body(accountRequest)
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, (req, resp) -> {
