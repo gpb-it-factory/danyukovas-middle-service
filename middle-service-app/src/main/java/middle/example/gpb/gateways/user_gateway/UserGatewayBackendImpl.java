@@ -36,7 +36,7 @@ public class UserGatewayBackendImpl implements UserGateway {
                 .toBodilessEntity();
         return true;
     }
-
+  
     @Override
     public UserResponseV2 getUserResponse(long id) {
         return restClient.get()
@@ -48,6 +48,4 @@ public class UserGatewayBackendImpl implements UserGateway {
                 .toEntity(UserResponseV2.class)
                 .getBody();
     }
-
-
 }
