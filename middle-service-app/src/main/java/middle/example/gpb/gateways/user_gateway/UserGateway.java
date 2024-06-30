@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface UserGateway {
 
-    public boolean newUserRegisterResponse(CreateUserRequestV2 userRequest);
-    
+    public void newUserRegisterResponse(CreateUserRequestV2 userRequest);
+
     public UserResponseV2 getUserResponse(long id);
 }

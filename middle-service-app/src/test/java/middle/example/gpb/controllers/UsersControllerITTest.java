@@ -40,7 +40,7 @@ class UsersControllerITTest {
     @Test
     public void whenValidDataAndUserAlreadyExistTest() throws Exception {
 
-        String exp = "Такой пользователь уже создан.";
+        String exp = "Такой пользователь уже зарегистрирован.";
 
         mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)

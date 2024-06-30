@@ -8,4 +8,4 @@ httpclient:
   requestTimeoutMs: 30000
 
 features:
-  backendServiceEnabled: true
+  backendServiceEnabled: false

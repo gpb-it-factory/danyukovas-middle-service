@@ -13,7 +13,7 @@ public class UserService {
         this.userGateway = userGateway;
     }
 
-    public boolean responseFromBackend(CreateUserRequestV2 createUserRequest) {
-        return userGateway.newUserRegisterResponse(createUserRequest);
+    public void responseFromBackend(CreateUserRequestV2 createUserRequest) {
+        userGateway.newUserRegisterResponse(createUserRequest);
     }
 }

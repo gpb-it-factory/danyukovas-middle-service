@@ -1,6 +1,5 @@
 package middle.example.gpb.gateways.account_gateway;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import middle.example.gpb.exeptions.CustomBackendServiceRuntimeException;
 import middle.example.gpb.gateways.BackendRepositoryMock;
@@ -12,8 +11,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -33,15 +33,15 @@ public class AccountGatewayMemoryMockImpl implements AccountGateway {
     public void newAccountRegisterResponse(CreateAccountRequestV2 accountRequest, long id) {
         if (repMock.getRepository().get(id).isEmpty()) {
             repMock.getRepository().put(id,
-                    Optional.of(new AccountsListResponseV2(UUID.randomUUID(), accountRequest.accountName(), new BigDecimal(5000))));
+                    List.of(new AccountsListResponseV2(UUID.randomUUID(), accountRequest.accountName(), new BigDecimal(5000))));
         } else {
-            byte[] error;
             try {
-                error = mapper.writeValueAsBytes(new InnerErrorV2("Аккаунт уже создан.", "Error", "409", UUID.randomUUID()));
-            } catch (JsonProcessingException e) {
+                byte[] error = mapper.writeValueAsBytes(
+                        new InnerErrorV2("Аккаунт уже существует.", "Error", "409", UUID.randomUUID()));
+                throw new CustomBackendServiceRuntimeException("message", new ByteArrayInputStream(error), mapper);
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            throw new CustomBackendServiceRuntimeException("message", new ByteArrayInputStream(error), mapper);
         }
     }
 }

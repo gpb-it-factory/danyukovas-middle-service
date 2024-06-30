@@ -22,12 +22,8 @@ public class UsersController {
 
     @PostMapping
     public ResponseEntity<ResponseToFront> registerNewUser(@Valid @RequestBody CreateUserRequestV2 newUser) {
-        boolean isSuccessRegistration = userService.responseFromBackend(newUser);
-        if (isSuccessRegistration) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseToFront("Пользователь успешно зарегистрирован."));
-        }
+        userService.responseFromBackend(newUser);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new ResponseToFront("Такой пользователь уже создан."));
+                .body(new ResponseToFront("Пользователь успешно зарегистрирован."));
     }
 }

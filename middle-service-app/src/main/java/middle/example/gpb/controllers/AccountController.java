@@ -20,15 +20,12 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+
     @PostMapping
     public ResponseEntity<ResponseToFront> registerNewAccount(@PathVariable(name = "id") long id,
                                                               @Valid @RequestBody CreateAccountRequestV2 newAccount) {
-        boolean isSuccessCreation = accountService.createNewAccount(newAccount, id);
-        if (isSuccessCreation) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseToFront("Аккаунт успешно создан."));
-        }
+        accountService.createNewAccount(newAccount, id);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new ResponseToFront("Пользователь не найден. Пожалуйста, сначала выполните регистрацию."));
+                .body(new ResponseToFront("Аккаунт успешно создан."));
     }
 }

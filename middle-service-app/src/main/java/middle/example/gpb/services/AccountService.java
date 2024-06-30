@@ -18,11 +18,9 @@ public class AccountService {
         this.userGateway = userGateway;
     }
 
-    public boolean createNewAccount(CreateAccountRequestV2 accountRequest, long id) {
-        if (userGateway.getUserResponse(id) == null) {
-            return false;
+    public void createNewAccount(CreateAccountRequestV2 accountRequest, long id) {
+        if (userGateway.getUserResponse(id) != null) {
+            accountGateway.newAccountRegisterResponse(accountRequest, id);
         }
-        accountGateway.newAccountRegisterResponse(accountRequest, id);
-        return true;
     }
 }

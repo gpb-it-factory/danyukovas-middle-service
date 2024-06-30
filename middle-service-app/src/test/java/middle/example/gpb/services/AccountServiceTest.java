@@ -1,46 +1,54 @@
 package middle.example.gpb.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import middle.example.gpb.gateways.BackendRepositoryMock;
-import middle.example.gpb.gateways.account_gateway.AccountGatewayMemoryMockImpl;
-import middle.example.gpb.gateways.user_gateway.UserGatewayMemoryMockImpl;
+import middle.example.gpb.gateways.account_gateway.AccountGateway;
+import middle.example.gpb.gateways.user_gateway.UserGateway;
 import middle.example.gpb.models.CreateAccountRequestV2;
-import org.junit.jupiter.api.BeforeEach;
+import middle.example.gpb.models.UserResponseV2;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.UUID;
 
+import static org.mockito.Mockito.*;
+
+@ActiveProfiles("test")
+@ExtendWith(MockitoExtension.class)
 class AccountServiceTest {
 
+    @Mock
+    private UserGateway userGateway;
+
+    @Mock
+    private AccountGateway accountGateway;
+
+    @InjectMocks
     private AccountService accountService;
 
-    @BeforeEach()
-    public void setUp() {
-        var repMock = new BackendRepositoryMock();
-        var userGateway = new UserGatewayMemoryMockImpl(repMock);
-        var accountGateway = new AccountGatewayMemoryMockImpl(repMock, new ObjectMapper());
-        accountService = new AccountService(accountGateway, userGateway);
-    }
-
     @Test
-    public void whenNotFoundUserNest() {
+    public void whenCreateAccountFoundUserTest() {
 
         var testId = 1234;
         var testAcc = new CreateAccountRequestV2("test");
+        when(userGateway.getUserResponse(testId)).thenReturn(new UserResponseV2(UUID.randomUUID()));
 
-        boolean res = accountService.createNewAccount(testAcc, testId);
+        accountService.createNewAccount(testAcc, testId);
 
-        assertFalse(res);
+        verify(accountGateway, times(1)).newAccountRegisterResponse(testAcc, testId);
     }
 
     @Test
-    public void whenFindUserTest() {
+    public void whenCreateAccountNotFoundUserTest() {
 
         var testId = 5;
         var testAcc = new CreateAccountRequestV2("test");
+        when(userGateway.getUserResponse(testId)).thenReturn(null);
 
-        boolean res = accountService.createNewAccount(testAcc, testId);
+        accountService.createNewAccount(testAcc, testId);
 
-        assertTrue(res);
+        verify(accountGateway, times(0)).newAccountRegisterResponse(testAcc, testId);
     }
 }
