@@ -31,7 +31,7 @@ class GlobalExceptionHandlerTest {
         var exception = new MethodArgumentNotValidException(null, bindingResult);
         when(bindingResult.getAllErrors()).thenReturn(fieldErrorList);
 
-        var res = globalExceptionHandler.handleMethodArgumentNotValidException(exception).getBody();
+        var res = globalExceptionHandler.handleMethodArgumentNotValidException(exception).getBody().answer();
         var exp = """
                 Полученные данные не валидны, пожалуйста, введите верную информацию.
                 Невалидные данные:
@@ -47,7 +47,7 @@ class GlobalExceptionHandlerTest {
         var data = Files.newInputStream(Paths.get("src/test/test-data/error.json"));
         var exception = new CustomBackendServiceRuntimeException("mock", data, mapper);
 
-        String res = globalExceptionHandler.handleMyCustomRuntimeException(exception).getBody();
+        String res = globalExceptionHandler.handleMyCustomRuntimeException(exception).getBody().answer();
         String exp = "result test message";
 
         assertEquals(exp, res);

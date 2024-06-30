@@ -29,7 +29,7 @@ public class AccountGatewayBackendImpl implements AccountGateway {
     @Override
     public void newAccountRegisterResponse(CreateAccountRequestV2 accountRequest, long id) {
         restClient.post()
-                .uri("/{id}/accounts", id)
+                .uri("/users/{id}/accounts", id)
                 .body(accountRequest)
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, (req, resp) -> {
@@ -41,7 +41,7 @@ public class AccountGatewayBackendImpl implements AccountGateway {
     @Override
     public List<AccountsListResponseV2> allAccountsResponse(long id) {
         return restClient.get()
-                .uri("/{id}/accounts", id)
+                .uri("users/{id}/accounts", id)
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, (req, resp) -> {
                     throw new CustomBackendServiceRuntimeException(req.toString(), resp.getBody(), mapper);

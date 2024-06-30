@@ -3,6 +3,7 @@ package middle.example.gpb.controllers;
 import jakarta.validation.Valid;
 import middle.example.gpb.models.AccountsListResponseV2;
 import middle.example.gpb.models.CreateAccountRequestV2;
+import middle.example.gpb.models.ResponseToFront;
 import middle.example.gpb.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,17 +25,19 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerNewAccount(@PathVariable(name = "id") long id,
-                                                @Valid @RequestBody CreateAccountRequestV2 newAccount) {
-        String response = accountService.createNewAccount(newAccount, id);
+    public ResponseEntity<ResponseToFront> registerNewAccount(@PathVariable(name = "id") long id,
+                                                              @Valid @RequestBody CreateAccountRequestV2 newAccount) {
+        accountService.createNewAccount(newAccount, id);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(response);
+                .body(new ResponseToFront("Аккаунт успешно создан."));
     }
 
     @GetMapping
-    public ResponseEntity<String> getAccountBalance(@PathVariable(name = "id") long id) {
-        String response = accountService.getAllAccounts(id);
+    public ResponseEntity<ResponseToFront> getAccountBalance(@PathVariable(name = "id") long id) {
+        List<AccountsListResponseV2> response = accountService.getAllAccounts(id);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(response);
+                .body(new ResponseToFront(response.stream()
+                        .map(AccountsListResponseV2::toString)
+                        .collect(Collectors.joining("\n"))));
     }
 }

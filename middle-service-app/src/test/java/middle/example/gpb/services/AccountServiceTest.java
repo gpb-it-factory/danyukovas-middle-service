@@ -1,84 +1,76 @@
 package middle.example.gpb.services;
 
-import middle.example.gpb.gateways.BackendRepositoryMock;
-import middle.example.gpb.gateways.account_gateway.AccountGatewayMemoryMockImpl;
-import middle.example.gpb.gateways.user_gateway.UserGatewayMemoryMockImpl;
+import middle.example.gpb.gateways.account_gateway.AccountGateway;
+import middle.example.gpb.gateways.user_gateway.UserGateway;
 import middle.example.gpb.models.CreateAccountRequestV2;
-import org.junit.jupiter.api.BeforeEach;
+import middle.example.gpb.models.UserResponseV2;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ActiveProfiles("test")
+@ExtendWith(MockitoExtension.class)
 class AccountServiceTest {
 
+    @Mock
+    private UserGateway userGateway;
+
+    @Mock
+    private AccountGateway accountGateway;
+
+    @InjectMocks
     private AccountService accountService;
 
-    @BeforeEach()
-    public void setUp() {
-        var repMock = new BackendRepositoryMock();
-        var userGateway = new UserGatewayMemoryMockImpl(repMock);
-        var accountGateway = new AccountGatewayMemoryMockImpl(repMock);
-        accountService = new AccountService(accountGateway, userGateway);
-    }
-
     @Test
-    public void whenNotFoundUserNest() {
+    public void whenCreateAccountFoundUserTest() {
 
-        var testId = 6;
+        var testId = 1234;
         var testAcc = new CreateAccountRequestV2("test");
+        when(userGateway.getUserResponse(testId)).thenReturn(new UserResponseV2(UUID.randomUUID()));
 
-        String res = accountService.createNewAccount(testAcc, testId);
-        String exp = "Пользователь не найден. Пожалуйста, сначала выполните регистрацию.";
+        accountService.createNewAccount(testAcc, testId);
 
-        assertEquals(exp, res);
+        verify(accountGateway, times(1)).newAccountRegisterResponse(testAcc, testId);
     }
 
     @Test
-    public void whenFindUserTest() {
+    public void whenCreateAccountNotFoundUserTest() {
 
         var testId = 5;
         var testAcc = new CreateAccountRequestV2("test");
+        when(userGateway.getUserResponse(testId)).thenReturn(null);
 
-        String res = accountService.createNewAccount(testAcc, testId);
-        String exp = "Аккаунт успешно создан.";
+        accountService.createNewAccount(testAcc, testId);
 
-        assertEquals(exp, res);
+        verify(accountGateway, times(0)).newAccountRegisterResponse(testAcc, testId);
     }
 
     @Test
     public void whenGetAllAccountsNotFoundUserTest() {
 
-        var testId = 6;
+        var testId = 2134L;
+        when(userGateway.getUserResponse(testId)).thenReturn(null);
 
-        String res = accountService.getAllAccounts(testId);
-        String exp =  "Пользователь не найден. Пожалуйста, сначала выполните регистрацию.";
-
-        assertEquals(exp, res);
+        assertThrows(RuntimeException.class, () -> accountService.getAllAccounts(testId));
     }
 
     @Test
-    public void whenGetAllAccountsFoundUserZeroAccountsTest() {
+    public void whenGetAllAccountsFoundUserTest() {
 
-        var testId = 1;
+        var testId = 1L;
+        when(userGateway.getUserResponse(testId)).thenReturn(new UserResponseV2(UUID.randomUUID()));
 
-        String res = accountService.getAllAccounts(testId);
-        String exp =  "Нет ни одного созданного аккаунта.";
+        accountService.getAllAccounts(testId);
 
-        assertEquals(exp, res);
-    }
+        verify(accountGateway, times(1)).allAccountsResponse(testId);
 
-    @Test
-    public void whenGetAllAccountsFoundUserHasAccountsTest() {
-
-        var testId = 66;
-
-        String res = accountService.getAllAccounts(testId);
-        String exp = """
-                Название аккаунта: test1
-                Сумма счета: 5000.00
-                Название аккаунта: test2
-                Сумма счета: 6000.00""";
-
-        assertEquals(exp, res);
     }
 }

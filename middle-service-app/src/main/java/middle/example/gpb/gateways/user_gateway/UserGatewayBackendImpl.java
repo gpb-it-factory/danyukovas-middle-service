@@ -25,8 +25,8 @@ public class UserGatewayBackendImpl implements UserGateway {
     }
 
     @Override
-    public boolean newUserRegisterResponse(CreateUserRequestV2 userRequest) {
-        ResponseEntity<Void> response = restClient.post()
+    public void newUserRegisterResponse(CreateUserRequestV2 userRequest) {
+        restClient.post()
                 .uri("/users")
                 .body(userRequest)
                 .retrieve()
@@ -34,13 +34,12 @@ public class UserGatewayBackendImpl implements UserGateway {
                     throw new CustomBackendServiceRuntimeException(req.toString(), resp.getBody(), mapper);
                 })
                 .toBodilessEntity();
-        return true;
     }
 
     @Override
     public UserResponseV2 getUserResponse(long id) {
         return restClient.get()
-                .uri("/{id}", id)
+                .uri("/users/{id}", id)
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, (req, resp) -> {
                     throw new CustomBackendServiceRuntimeException(req.toString(), resp.getBody(), mapper);
@@ -48,6 +47,4 @@ public class UserGatewayBackendImpl implements UserGateway {
                 .toEntity(UserResponseV2.class)
                 .getBody();
     }
-
-
 }

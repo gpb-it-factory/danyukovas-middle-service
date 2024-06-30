@@ -13,8 +13,7 @@ public class UserService {
         this.userGateway = userGateway;
     }
 
-    public String responseFromBackend(CreateUserRequestV2 createUserRequest) {
-        return userGateway.newUserRegisterResponse(createUserRequest) ?
-                "Пользователь успешно зарегистрирован." : "Такой пользователь уже создан.";
+    public void responseFromBackend(CreateUserRequestV2 createUserRequest) {
+        userGateway.newUserRegisterResponse(createUserRequest);
     }
 }

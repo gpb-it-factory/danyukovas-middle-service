@@ -7,9 +7,7 @@ import middle.example.gpb.models.CreateAccountRequestV2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
@@ -23,25 +21,17 @@ public class AccountService {
         this.userGateway = userGateway;
     }
 
-    public String createNewAccount(CreateAccountRequestV2 accountRequest, long id) {
+    public void createNewAccount(CreateAccountRequestV2 accountRequest, long id) {
         if (userGateway.getUserResponse(id) != null) {
             accountGateway.newAccountRegisterResponse(accountRequest, id);
-            return "Аккаунт успешно создан.";
-        } else {
-            return "Пользователь не найден. Пожалуйста, сначала выполните регистрацию.";
         }
     }
 
-    public String getAllAccounts(long id) {
-        if (userGateway.getUserResponse(id) == null) {
-            return "Пользователь не найден. Пожалуйста, сначала выполните регистрацию.";
+    public List<AccountsListResponseV2> getAllAccounts(long id) {
+        if (userGateway.getUserResponse(id) != null) {
+            return accountGateway.allAccountsResponse(id);
+        } else {
+            throw new RuntimeException();
         }
-        var response = accountGateway.allAccountsResponse(id);
-        if (response.isEmpty()) {
-            return "Нет ни одного созданного аккаунта.";
-        }
-        return response.stream()
-                .map(AccountsListResponseV2::toString)
-                .collect(Collectors.joining("\n"));
     }
 }

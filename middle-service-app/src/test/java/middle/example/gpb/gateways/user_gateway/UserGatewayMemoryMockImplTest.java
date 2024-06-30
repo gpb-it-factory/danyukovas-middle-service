@@ -1,5 +1,7 @@
 package middle.example.gpb.gateways.user_gateway;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import middle.example.gpb.exeptions.CustomBackendServiceRuntimeException;
 import middle.example.gpb.gateways.BackendRepositoryMock;
 import middle.example.gpb.models.CreateUserRequestV2;
 import middle.example.gpb.models.UserResponseV2;
@@ -10,22 +12,25 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserGatewayMemoryMockImplTest {
 
-    private UserGatewayMemoryMockImpl gatewayMock;
+    private UserGatewayMemoryMockImpl userGatewayMock;
+    private BackendRepositoryMock repositoryMock;
 
     @BeforeEach
     public void setUp() {
-        BackendRepositoryMock repositoryMock = new BackendRepositoryMock();
-        gatewayMock = new UserGatewayMemoryMockImpl(repositoryMock);
+        repositoryMock = new BackendRepositoryMock();
+        userGatewayMock = new UserGatewayMemoryMockImpl(repositoryMock, new ObjectMapper());
     }
 
     @Test
     public void whenUserNotCreatedTest() {
 
-        var newUser = new CreateUserRequestV2(6L, "test");
+        var newUser = new CreateUserRequestV2(10L, "test");
+        var sizeUntilOperation = repositoryMock.getRepository().size();
 
-        boolean res = gatewayMock.newUserRegisterResponse(newUser);
+        userGatewayMock.newUserRegisterResponse(newUser);
+        var res = repositoryMock.getRepository().size();
 
-        assertTrue(res);
+        assertEquals(sizeUntilOperation + 1, res);
     }
 
     @Test
@@ -33,17 +38,16 @@ class UserGatewayMemoryMockImplTest {
 
         var newUser = new CreateUserRequestV2(1L, "test");
 
-        boolean res = gatewayMock.newUserRegisterResponse(newUser);
-
-        assertFalse(res);
+        assertThrows(CustomBackendServiceRuntimeException.class,
+                () -> userGatewayMock.newUserRegisterResponse(newUser));
     }
 
     @Test
-    public void whenUserResponseFindUserTest() {
+    public void whenUserResponseFondUserTest() {
 
         var testId = 1L;
 
-        UserResponseV2 res = gatewayMock.getUserResponse(testId);
+        UserResponseV2 res = userGatewayMock.getUserResponse(testId);
 
         assertNotNull(res);
     }
@@ -51,10 +55,9 @@ class UserGatewayMemoryMockImplTest {
     @Test
     public void whenUserResponseNotFoundTest() {
 
-        long testId = 6L;
+        long testId = 66L;
 
-        UserResponseV2 res = gatewayMock.getUserResponse(testId);
-
-        assertNull(res);
+        assertThrows(CustomBackendServiceRuntimeException.class,
+                () -> userGatewayMock.getUserResponse(testId));
     }
 }
