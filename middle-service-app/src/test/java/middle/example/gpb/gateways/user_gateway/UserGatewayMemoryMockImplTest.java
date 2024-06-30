@@ -28,9 +28,11 @@ class UserGatewayMemoryMockImplTest {
         var sizeUntilOperation = repositoryMock.getRepository().size();
 
         userGatewayMock.newUserRegisterResponse(newUser);
-        var res = repositoryMock.getRepository().size();
+        var finSizeRep = repositoryMock.getRepository().size();
+        var finSizeUsers = repositoryMock.getUsers().size();
 
-        assertEquals(sizeUntilOperation + 1, res);
+        assertEquals(sizeUntilOperation + 1, finSizeRep);
+        assertEquals(sizeUntilOperation + 1, finSizeUsers);
     }
 
     @Test

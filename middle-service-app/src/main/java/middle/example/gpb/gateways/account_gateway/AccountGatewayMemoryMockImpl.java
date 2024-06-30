@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +34,7 @@ public class AccountGatewayMemoryMockImpl implements AccountGateway {
     public void newAccountRegisterResponse(CreateAccountRequestV2 accountRequest, long id) {
         if (repMock.getRepository().get(id).isEmpty()) {
             repMock.getRepository().put(id,
-                    List.of(new AccountsListResponseV2(UUID.randomUUID(), accountRequest.accountName(), new BigDecimal(5000))));
+                    new ArrayList<>(List.of(new AccountsListResponseV2(UUID.randomUUID(), accountRequest.accountName(), new BigDecimal(5000)))));
         } else {
             try {
                 byte[] error = mapper.writeValueAsBytes(

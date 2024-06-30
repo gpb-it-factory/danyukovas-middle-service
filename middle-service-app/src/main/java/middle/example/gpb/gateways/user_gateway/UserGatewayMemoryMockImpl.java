@@ -32,6 +32,7 @@ public class UserGatewayMemoryMockImpl implements UserGateway {
         Set<Long> users = backendRepository.getRepository().keySet();
         if (!users.contains(userRequest.userId())) {
             backendRepository.getRepository().put(userRequest.userId(), new ArrayList<>());
+            backendRepository.getUsers().put(userRequest.userId(), userRequest.userName());
         } else {
             try {
                 byte[] error = mapper.writeValueAsBytes(
