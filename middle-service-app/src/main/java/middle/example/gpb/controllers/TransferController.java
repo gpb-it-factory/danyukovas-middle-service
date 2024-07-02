@@ -1,6 +1,7 @@
 package middle.example.gpb.controllers;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import middle.example.gpb.models.CreateTransferRequest;
 import middle.example.gpb.models.ResponseToFront;
 import middle.example.gpb.services.TransferService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("api/v2/transfer")
 public class TransferController {
@@ -28,6 +30,7 @@ public class TransferController {
         var response = transferService.transferMoney(transferRequest) ?
                 new ResponseToFront("Перевод успешно совершен!") :
                 new ResponseToFront("Сумма для перевода введенная вами некорректна, пожалуйста, измените сумму и попробуйте снова.");
+        log.info("Отправка сообщения пользователю {} о результате трансфера.", transferRequest.from());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(response);
     }

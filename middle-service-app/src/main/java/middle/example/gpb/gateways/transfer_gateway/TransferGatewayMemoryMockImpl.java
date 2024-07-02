@@ -1,6 +1,7 @@
 package middle.example.gpb.gateways.transfer_gateway;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import middle.example.gpb.exeptions.CustomBackendServiceRuntimeException;
 import middle.example.gpb.gateways.BackendRepositoryMock;
 import middle.example.gpb.gateways.account_gateway.AccountGateway;
@@ -15,11 +16,11 @@ import org.springframework.stereotype.Component;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+@Slf4j
 @Component
 @ConditionalOnProperty(prefix = "features", name = "backendServiceEnabled", havingValue = "false", matchIfMissing = true)
 public class TransferGatewayMemoryMockImpl implements TransferGateway {
@@ -40,6 +41,7 @@ public class TransferGatewayMemoryMockImpl implements TransferGateway {
     public TransferResponseV2 postTransferResponse(CreateTransferRequest transferRequest) {
         var findId = repositoryMock.findAccByName(transferRequest.to());
         if (findId.isPresent()) {
+            log.debug("Аккаунт пользователя {} получен.", transferRequest.to());
             var receiverToId = findId.get();
             lock.lock();
             try {
@@ -59,7 +61,9 @@ public class TransferGatewayMemoryMockImpl implements TransferGateway {
             } finally {
                 lock.unlock();
             }
-            return new TransferResponseV2(UUID.randomUUID());
+            UUID uuid = UUID.randomUUID();
+            log.debug("Получение уникального traceId перевода: {}.", uuid);
+            return new TransferResponseV2(uuid);
         } else {
             try {
                 byte[] error = mapper.writeValueAsBytes(

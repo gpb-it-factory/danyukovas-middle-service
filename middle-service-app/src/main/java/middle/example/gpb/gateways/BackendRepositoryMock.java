@@ -1,6 +1,7 @@
 package middle.example.gpb.gateways;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import middle.example.gpb.models.AccountsListResponseV2;
 import org.springframework.stereotype.Component;
 
@@ -8,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Getter
 @Component
 public class BackendRepositoryMock {
@@ -35,13 +37,13 @@ public class BackendRepositoryMock {
     ));
 
     public void updateAccountList(Long id, AccountsListResponseV2 newAccount) {
+        log.debug("Обновление счета аккаунта пользователя {}.", id);
         List<AccountsListResponseV2> accountList = repository.get(id);
-        if (!accountList.isEmpty()) {
             accountList.set(0, newAccount);
-        }
     }
 
     public Optional<Long> findAccByName(String name) {
+        log.debug("Поиск аккаунта пользователя с username'ом {}, которому переводят деньги.", name);
         return users.entrySet().stream()
                 .filter(v -> v.getValue().contains(name))
                 .map(Map.Entry::getKey)

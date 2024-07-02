@@ -1,6 +1,7 @@
 package middle.example.gpb.gateways.account_gateway;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import middle.example.gpb.exeptions.CustomBackendServiceRuntimeException;
 import middle.example.gpb.gateways.BackendRepositoryMock;
 import middle.example.gpb.models.AccountsListResponseV2;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Component
 @ConditionalOnProperty(prefix = "features", name = "backendServiceEnabled", havingValue = "false", matchIfMissing = true)
 public class AccountGatewayMemoryMockImpl implements AccountGateway {
@@ -33,6 +35,7 @@ public class AccountGatewayMemoryMockImpl implements AccountGateway {
     @Override
     public void newAccountRegisterResponse(CreateAccountRequestV2 accountRequest, long id) {
         if (repMock.getRepository().get(id).isEmpty()) {
+            log.debug("Добавление аккаунта пользователя {} в систему.", id);
             repMock.getRepository().put(id,
                     new ArrayList<>(List.of(new AccountsListResponseV2(UUID.randomUUID(), accountRequest.accountName(), new BigDecimal(5000)))));
         } else {
@@ -48,6 +51,7 @@ public class AccountGatewayMemoryMockImpl implements AccountGateway {
 
     @Override
     public List<AccountsListResponseV2> allAccountsResponse(long id) {
+        log.debug("Проверка на наличие аккаунтов у пользователя {}.", id);
         var accountsResponse = repMock.getRepository().get(id);
         if (accountsResponse.isEmpty()) {
             try {
@@ -58,6 +62,7 @@ public class AccountGatewayMemoryMockImpl implements AccountGateway {
                 throw new RuntimeException(e);
             }
         } else {
+            log.debug("Получение аккаунтов пользователя {}.", id);
             return accountsResponse;
         }
     }
