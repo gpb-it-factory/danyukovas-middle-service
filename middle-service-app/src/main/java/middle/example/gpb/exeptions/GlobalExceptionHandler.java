@@ -27,7 +27,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceAccessException.class)
     public ResponseEntity<ResponseToFront> handleResourceAccessException(ResourceAccessException e) {
-        log.error("Ошибка при запросе в Backend сервис(он не работает): {}.", e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseToFront("""
                         К сожалению, Backend сервис сейчас недоступен, нам очень жаль, попробуйте позже. Вот вам зайчик:\s
