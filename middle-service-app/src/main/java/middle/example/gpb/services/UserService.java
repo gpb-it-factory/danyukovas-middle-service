@@ -2,6 +2,7 @@ package middle.example.gpb.services;
 
 import middle.example.gpb.models.CreateUserRequestV2;
 import middle.example.gpb.gateways.user_gateway.UserGateway;
+import middle.example.gpb.models.ResponseToFront;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,7 +14,9 @@ public class UserService {
         this.userGateway = userGateway;
     }
 
-    public void responseFromBackend(CreateUserRequestV2 createUserRequest) {
-        userGateway.newUserRegisterResponse(createUserRequest);
+    public ResponseToFront responseFromBackend(CreateUserRequestV2 createUserRequest) {
+        return userGateway.newUserRegisterResponse(createUserRequest) ?
+                new ResponseToFront("Пользователь успешно зарегистрирован.") :
+                new ResponseToFront("Такой пользователь уже создан.");
     }
 }
