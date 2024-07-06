@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
         String invalidDataInString = validatorBuilder(ex);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseToFront("Полученные данные не валидны, пожалуйста, введите верную информацию." + "\n"
-                + "Невалидные данные:" + "\n" + invalidDataInString));
+                        + "Невалидные данные:" + "\n" + invalidDataInString));
     }
 
     private String validatorBuilder(MethodArgumentNotValidException ex) {

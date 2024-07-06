@@ -1,7 +1,7 @@
 spring.application.name: gpb
 
 httpclient:
-  uri: http://localhost:8087/api/v2
+  back-service-uri: http://84.201.135.27:8080/v2
   maxConPerRoute: 20
   maxConTotal: 50
   connectionTimeoutMs: 5000

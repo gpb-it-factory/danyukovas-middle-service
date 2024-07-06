@@ -22,8 +22,8 @@ public class UsersController {
 
     @PostMapping
     public ResponseEntity<ResponseToFront> registerNewUser(@Valid @RequestBody CreateUserRequestV2 newUser) {
-        var result = userService.responseFromBackend(newUser);
+        userService.responseFromBackend(newUser);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(result);
+                .body(new ResponseToFront("Пользователь успешно зарегистрирован."));
     }
 }

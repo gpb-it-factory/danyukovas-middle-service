@@ -1,6 +1,5 @@
 package middle.example.gpb.controllers;
 
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,22 +14,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-class UsersControllerITTest {
+public class AccountControllerITTest {
 
     @Autowired
     MockMvc mockMvc;
 
     @Test
-    public void whenValidDataAndSuccessCreateNewUserTest() throws Exception {
+    public void whenValidDataAndSuccessCreateAccountTest() throws Exception {
 
-        String exp = "Пользователь успешно зарегистрирован.";
+        var testId = 1L;
 
-        mockMvc.perform(post("/api/users")
+        String exp = "Аккаунт успешно создан.";
+
+        mockMvc.perform(post("/api/v2/users/{id}/accounts", testId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                  "userId": 12345, \s
-                                  "userName": "test"
+                                  "accountName": "test"
                                 }
                                 """))
                 .andExpect(status().isOk())
@@ -38,16 +38,17 @@ class UsersControllerITTest {
     }
 
     @Test
-    public void whenValidDataAndUserAlreadyExistTest() throws Exception {
+    public void whenValidDataAndAccountAlreadyExistTest() throws Exception {
 
-        String exp = "Такой пользователь уже зарегистрирован.";
+        var testId = 6L;
 
-        mockMvc.perform(post("/api/users")
+        String exp = "Аккаунт уже существует.";
+
+        mockMvc.perform(post("/api/v2/users/{id}/accounts", testId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                  "userId": 1, \s
-                                  "userName": "test"
+                                  "accountName": "test"
                                 }
                                 """))
                 .andExpect(status().isOk())
@@ -55,19 +56,20 @@ class UsersControllerITTest {
     }
 
     @Test
-    public void whenInvalidDataThenMethodArgumentNotValidExceptionTest() throws Exception {
+    public void whenValidDataAndUserNotRegisteredAndTryCreateAccountTest() throws Exception {
 
-        String exp = "Полученные данные не валидны, пожалуйста, введите верную информацию.";
+        var testId = 1234L;
 
-        mockMvc.perform(post("/api/users")
+        String exp = "Пользователь не найден. Пожалуйста, сначала выполните регистрацию.";
+
+        mockMvc.perform(post("/api/v2/users/{id}/accounts", testId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                  "userId": null, \s
-                                  "userName": ""
+                                  "accountName": "test"
                                 }
-                               """))
+                                """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.answer").value(Matchers.containsString(exp)));
+                .andExpect(jsonPath("$.answer").value(exp));
     }
 }
