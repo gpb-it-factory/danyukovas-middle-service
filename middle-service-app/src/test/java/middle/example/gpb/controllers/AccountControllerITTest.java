@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -69,6 +70,32 @@ public class AccountControllerITTest {
                                   "accountName": "test"
                                 }
                                 """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.answer").value(exp));
+    }
+
+    @Test
+    public void whenUserRegisteredAndAccountsExistTest() throws Exception {
+
+        var testId = 6L;
+
+        String exp = """
+                Название аккаунта: test
+                Сумма счета: 5000""";
+
+        mockMvc.perform(get("/api/v2/users/{id}/accounts", testId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.answer").value(exp));
+    }
+
+    @Test
+    public void whenUserRegisteredAndAccountsNotExistTest() throws Exception {
+
+        var testId = 1L;
+
+        String exp = "Нет созданных аккаунтов.";
+
+        mockMvc.perform(get("/api/v2/users/{id}/accounts", testId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.answer").value(exp));
     }

@@ -3,9 +3,14 @@ package middle.example.gpb.gateways.account_gateway;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import middle.example.gpb.exeptions.CustomBackendServiceRuntimeException;
 import middle.example.gpb.gateways.BackendRepositoryMock;
+import middle.example.gpb.models.AccountsListResponseV2;
 import middle.example.gpb.models.CreateAccountRequestV2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -52,5 +57,26 @@ class AccountGatewayMemoryMockImplTest {
         assertThrows(NullPointerException.class, () -> {
             gatewayMock.newAccountRegisterResponse(newAcc, testId);
         });
+    }
+
+    @Test
+    public void whenGetAllAccountsSuccessTest() {
+
+        var testId = 6L;
+
+        var res = gatewayMock.allAccountsResponse(testId);
+        var exp = List.of(
+                new AccountsListResponseV2(UUID.fromString("a46e9ea0-917a-4126-9676-8053b8536241"), "test", new BigDecimal(5000)));
+
+        assertEquals(exp, res);
+    }
+
+    @Test
+    public void whenGetAllAccountsNotFoundAccountsTest() {
+
+        var testId = 5L;
+
+        assertThrows(CustomBackendServiceRuntimeException.class,
+                () -> gatewayMock.allAccountsResponse(testId));
     }
 }

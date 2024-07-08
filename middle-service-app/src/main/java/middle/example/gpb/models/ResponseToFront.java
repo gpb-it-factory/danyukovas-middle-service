@@ -1,3 +1,4 @@
 package middle.example.gpb.models;
 
-public record ResponseToFront(String answer) {}
+public record ResponseToFront(String answer) {
+}

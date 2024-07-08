@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ActiveProfiles("test")
@@ -50,5 +51,26 @@ class AccountServiceTest {
         accountService.createNewAccount(testAcc, testId);
 
         verify(accountGateway, times(0)).newAccountRegisterResponse(testAcc, testId);
+    }
+
+    @Test
+    public void whenGetAllAccountsNotFoundUserTest() {
+
+        var testId = 2134L;
+        when(userGateway.getUserResponse(testId)).thenReturn(null);
+
+        assertThrows(RuntimeException.class, () -> accountService.getAllAccounts(testId));
+    }
+
+    @Test
+    public void whenGetAllAccountsFoundUserTest() {
+
+        var testId = 1L;
+        when(userGateway.getUserResponse(testId)).thenReturn(new UserResponseV2(UUID.randomUUID()));
+
+        accountService.getAllAccounts(testId);
+
+        verify(accountGateway, times(1)).allAccountsResponse(testId);
+
     }
 }
