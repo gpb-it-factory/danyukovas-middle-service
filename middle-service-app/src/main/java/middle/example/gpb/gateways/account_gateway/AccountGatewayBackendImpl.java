@@ -40,7 +40,7 @@ public class AccountGatewayBackendImpl implements AccountGateway {
                 })
                 .toBodilessEntity();
     }
-  
+
     @Override
     public List<AccountsListResponseV2> allAccountsResponse(long id) {
         log.info("Запрос в Backend сервис для получения аккаунтов пользователя {}.", id);

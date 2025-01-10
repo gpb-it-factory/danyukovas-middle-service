@@ -29,7 +29,7 @@ public class TransferService {
         log.info("Начало перевода денег от пользователя {} пользователю {}.", transferRequest.from(), transferRequest.to());
         long id = Long.parseLong(transferRequest.from());
         if (userGateway.getUserResponse(id) == null) {
-            throw new RuntimeException();
+            throw new RuntimeException("Произошло невозможное!!!!!!!");
         }
         var account = accountGateway.allAccountsResponse(id).get(0);
         var newAmount = account.amount().subtract(transferRequest.amount());
@@ -39,7 +39,7 @@ public class TransferService {
             return false;
         }
         if (transferGateway.postTransferResponse(transferRequest) == null) {
-            throw new RuntimeException();
+            throw new RuntimeException("Произошло невозможное!!!!!!!");
         }
         log.info("Трансфер прошел успешно.");
         return true;

@@ -36,7 +36,7 @@ public class AccountService {
             log.info("Аккаунты пользователя {} существуют и получены.", id);
             return accountGateway.allAccountsResponse(id);
         } else {
-            throw new RuntimeException();
+            throw new RuntimeException("Произошло невозможное!!!!!!!");
         }
     }
 }
